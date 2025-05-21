@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 My Task Dashboard
 
-## Getting Started
+یک پروژه داشبورد مدیریت تسک‌ها که با استفاده از **Next.js 14 (App Router)** ساخته شده و امکانات کامل **احراز هویت، ایجاد، ویرایش، حذف و تغییر وضعیت تسک‌ها** را فراهم می‌کند.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ موارد استفاده شده:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **MongoDB** برای ذخیره‌سازی دیتا
+- **NextAuth.js** برای احراز هویت
+- **Axios / SWR** برای ارتباط با API
+- **Tailwind CSS** برای طراحی رابط کاربری
+- **React Icons**, **Toastify**, و **Framer Motion** برای انیمیشن و نوتیفیکیشن‌ها
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 امکانات پروژه:
 
-## Learn More
+- ثبت‌نام و ورود کاربران
+- ایجاد تسک با عنوان، توضیح و وضعیت
+- تغییر وضعیت تسک با Drag & Drop
+- حذف و ویرایش تسک‌ها
+- نوتیفیکیشن‌های زیبا با Toastify
+- طراحی ریسپانسیو و حرفه‌ای
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚠️ نکته مهم در اجرای پروژه
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+این پروژه از متغیرهای محیطی استفاده می‌کند. برای اجرای آن ابتدا باید یک فایل با نام `.env.local` در ریشه پروژه ایجاد کرده و مقادیر زیر را در آن قرار دهید:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXTAUTH_SECRET=your-secret-key-here
+MONGODB_URI=your-mongodb-uri-here
