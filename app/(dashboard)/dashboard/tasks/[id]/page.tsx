@@ -1,4 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+type PageProps = {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
 const getTask = async (id: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -12,14 +19,7 @@ const getTask = async (id: string) => {
   return res.json();
 };
 
-const TaskDetails = async ({
-  params,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) => {
+export default async function Page({ params }: PageProps) {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
@@ -30,6 +30,4 @@ const TaskDetails = async ({
       <p>{task.description}</p>
     </div>
   );
-};
-
-export default TaskDetails;
+}
