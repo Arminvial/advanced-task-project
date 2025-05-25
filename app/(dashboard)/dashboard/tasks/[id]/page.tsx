@@ -1,16 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
-const getTask = async (id: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${id}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-
-  return res.json();
-};
-
 
 export async function generateMetadata({
   params,
@@ -25,14 +15,22 @@ export async function generateMetadata({
   };
 }
 
+const getTask = async (id: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${id}`, {
+    cache: "no-store",
+  });
 
-type Props = {
-  params: {
-    id: string;
-  };
+  if (!res.ok) return null;
+
+  return res.json();
 };
 
-export default async function TaskDetails({ params }: Props) {
+
+export default async function TaskDetails({
+  params,
+}: {
+  params: { id: string };
+}) {
   const task = await getTask(params.id);
 
   if (!task) {
