@@ -1,3 +1,5 @@
+// app/(dashboard)/dashboard/tasks/[id]/page.tsx
+
 import { notFound } from "next/navigation";
 
 const getTask = async (id: string) => {
@@ -10,7 +12,13 @@ const getTask = async (id: string) => {
   return res.json();
 };
 
-const TaskDetails = async ({ params }: { params: { id: string } }) => {
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
+const TaskDetails = async ({ params }: Props) => {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
