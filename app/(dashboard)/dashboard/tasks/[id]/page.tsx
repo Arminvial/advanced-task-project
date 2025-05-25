@@ -1,14 +1,7 @@
 import { notFound } from "next/navigation";
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
 const getTask = async (id: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${id}`, {
     cache: "no-store",
   });
 
@@ -17,12 +10,10 @@ const getTask = async (id: string) => {
   return res.json();
 };
 
-const TaskDetails = async ({ params }: Props) => {
+const TaskDetails = async ({ params }: { params: { id: string } }) => {
   const task = await getTask(params.id);
 
-  if (!task) {
-    return notFound(); 
-  }
+  if (!task) return notFound();
 
   return (
     <div>
