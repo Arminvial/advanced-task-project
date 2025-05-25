@@ -1,24 +1,19 @@
-// app/(dashboard)/dashboard/tasks/[id]/page.tsx
-
 import { notFound } from "next/navigation";
 
-const getTask = async (id: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${id}`, {
+async function getTask(id: string) {
+  
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     cache: "no-store",
   });
 
   if (!res.ok) return null;
 
   return res.json();
-};
+}
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-const TaskDetails = async ({ params }: Props) => {
+export default async function TaskDetails({ params }: { params: { id: string } }) {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
@@ -29,6 +24,4 @@ const TaskDetails = async ({ params }: Props) => {
       <p>{task.description}</p>
     </div>
   );
-};
-
-export default TaskDetails;
+}

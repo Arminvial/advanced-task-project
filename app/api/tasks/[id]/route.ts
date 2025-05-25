@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { getUserIdFromSession } from "@/lib/auth";
