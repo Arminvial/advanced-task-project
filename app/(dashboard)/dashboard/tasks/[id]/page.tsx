@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 
-async function getTask(id: string) {
-  
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const getTask = async (id: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     cache: "no-store",
@@ -11,9 +10,16 @@ async function getTask(id: string) {
   if (!res.ok) return null;
 
   return res.json();
-}
+};
 
-export default async function TaskDetails({ params }: { params: { id: string } }) {
+const TaskDetails = async ({
+  params,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) => {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
@@ -24,4 +30,6 @@ export default async function TaskDetails({ params }: { params: { id: string } }
       <p>{task.description}</p>
     </div>
   );
-}
+};
+
+export default TaskDetails;
