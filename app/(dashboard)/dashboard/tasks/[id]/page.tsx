@@ -1,16 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const task = await getTask(params.id);
-
-  return {
-    title: task ? task.title : "Task Not Found",
-    description: task ? task.description : "No description available.",
-  };
-}
-
-
 type Props = {
   params: {
     id: string;
@@ -26,6 +16,16 @@ const getTask = async (id: string) => {
 
   return res.json();
 };
+
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const task = await getTask(params.id);
+
+  return {
+    title: task ? task.title : "Task Not Found",
+    description: task ? task.description : "No description available.",
+  };
+}
 
 export default async function TaskDetails({ params }: Props) {
   const task = await getTask(params.id);
