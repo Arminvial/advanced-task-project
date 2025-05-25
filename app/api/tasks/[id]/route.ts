@@ -15,13 +15,19 @@ export async function GET(request: Request, { params }: Params) {
     await connectDB();
     const userId = await getUserIdFromSession();
 
-    const tasks = await Task.find({ userId });
-    return NextResponse.json(tasks);
+    const task = await Task.findOne({ _id: params.id, userId });
+
+    if (!task) {
+      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(task);
   } catch (error) {
-    console.error("خطا در دریافت تسک‌ها:", error);
-    return NextResponse.json({ error: "خطا در دریافت تسک‌ها" }, { status: 500 });
+    console.error("خطا در دریافت تسک:", error);
+    return NextResponse.json({ error: "خطا در دریافت تسک" }, { status: 500 });
   }
 }
+
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
