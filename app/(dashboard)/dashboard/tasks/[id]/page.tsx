@@ -1,13 +1,24 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
-interface Props {
-  params: {
-    id: string;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const task = await getTask(params.id);
+
+  return {
+    title: task ? task.title : "Task Not Found",
+    description: task ? task.description : "No description available.",
   };
 }
 
+
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
 const getTask = async (id: string) => {
-  const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/${id}`, {
     cache: "no-store",
   });
 
@@ -16,11 +27,11 @@ const getTask = async (id: string) => {
   return res.json();
 };
 
-const TaskDetails = async ({ params }: Props) => {
+export default async function TaskDetails({ params }: Props) {
   const task = await getTask(params.id);
 
   if (!task) {
-    return notFound(); 
+    return notFound();
   }
 
   return (
@@ -29,6 +40,4 @@ const TaskDetails = async ({ params }: Props) => {
       <p>{task.description}</p>
     </div>
   );
-};
-
-export default TaskDetails;
+}
