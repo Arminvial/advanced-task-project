@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 
+type Params = {
+  id: string;
+};
+
 type Props = {
-  params: Record<string, string>; 
+  params: Params | Promise<Params>; 
 };
 
 async function getTask(id: string) {
@@ -23,7 +27,9 @@ async function getTask(id: string) {
 }
 
 export default async function TaskPage({ params }: Props) {
-  const task = await getTask(params.id);
+  
+  const realParams = await params;
+  const task = await getTask(realParams.id);
 
   if (!task) return notFound();
 
