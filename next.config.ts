@@ -1,7 +1,7 @@
 const nextConfig = {
   experimental: {
-    serverActions: true, 
-  },
+  serverActions: {}, 
+},
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: false, 

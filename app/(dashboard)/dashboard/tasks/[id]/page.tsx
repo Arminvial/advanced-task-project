@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 
-type Params = { id: string };
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
 
 async function getTask(id: string) {
   const baseUrl =
@@ -15,15 +19,15 @@ async function getTask(id: string) {
   return res.json();
 }
 
-export default async function TaskDetails({ params }: { params: Params }) {
+export default async function TaskDetails({ params }: PageProps) {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
 
   return (
-    <div>
-      <h1>{task.title}</h1>
-      <p>{task.description}</p>
+    <div className="p-6">
+      <h1 className="text-xl font-bold">{task.title}</h1>
+      <p className="mt-2 text-gray-700">{task.description}</p>
     </div>
   );
 }
