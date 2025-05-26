@@ -1,28 +1,27 @@
 import { notFound } from "next/navigation";
 
+interface PageProps {
+  params: { id: string };
+}
+
 async function getTask(id: string) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    "https://advanced-task-project.vercel.app";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://advanced-task-project.vercel.app";
 
   const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     cache: "no-store",
   });
 
   if (!res.ok) return null;
+
   return res.json();
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const task = await getTask(params.id);
+export default async function TaskPage(props: PageProps) {
+  const { id } = props.params;
+  const task = await getTask(id);
 
-  if (!task) {
-    return notFound();
-  }
+  if (!task) return notFound();
 
   return (
     <div>
@@ -31,4 +30,3 @@ export default async function Page({
     </div>
   );
 }
-
