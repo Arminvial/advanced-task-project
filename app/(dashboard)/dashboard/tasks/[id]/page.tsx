@@ -1,10 +1,6 @@
 import { notFound } from "next/navigation";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+type Params = { id: string };
 
 async function getTask(id: string) {
   const baseUrl =
@@ -19,12 +15,10 @@ async function getTask(id: string) {
   return res.json();
 }
 
-export default async function TaskDetails({ params }: PageProps) {
+export default async function TaskDetails({ params }: { params: Params }) {
   const task = await getTask(params.id);
 
-  if (!task) {
-    return notFound();
-  }
+  if (!task) return notFound();
 
   return (
     <div>
