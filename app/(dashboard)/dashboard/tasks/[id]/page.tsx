@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
 
-type Params = {
-  id: string;
-};
-
 type Props = {
-  params: Params | Promise<Params>; 
+  params: {
+    id: string;
+  };
 };
 
 async function getTask(id: string) {
@@ -19,6 +17,7 @@ async function getTask(id: string) {
     });
 
     if (!res.ok) return null;
+
     return res.json();
   } catch (error) {
     console.error("خطا در دریافت تسک:", error);
@@ -27,9 +26,7 @@ async function getTask(id: string) {
 }
 
 export default async function TaskPage({ params }: Props) {
-  
-  const realParams = await params;
-  const task = await getTask(realParams.id);
+  const task = await getTask(params.id);
 
   if (!task) return notFound();
 
