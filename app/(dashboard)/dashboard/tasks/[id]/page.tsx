@@ -1,7 +1,15 @@
 import { notFound } from "next/navigation";
 
-const getTask = async (id: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
+async function getTask(id: string) {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://advanced-task-project.vercel.app";
+
   const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     cache: "no-store",
   });
@@ -9,9 +17,9 @@ const getTask = async (id: string) => {
   if (!res.ok) return null;
 
   return res.json();
-};
+}
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: PageProps) {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
