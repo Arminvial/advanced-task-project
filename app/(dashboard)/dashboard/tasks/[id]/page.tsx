@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-type Props = {
+type PageProps = {
   params: {
     id: string;
   };
@@ -25,7 +25,7 @@ async function getTask(id: string) {
   }
 }
 
-export default async function TaskPage({ params }: Props) {
+export default async function TaskPage({ params }: PageProps) {
   const task = await getTask(params.id);
 
   if (!task) return notFound();
