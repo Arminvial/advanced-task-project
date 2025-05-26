@@ -1,5 +1,11 @@
 import { notFound } from "next/navigation";
 
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
 async function getTask(id: string) {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ||
@@ -13,11 +19,7 @@ async function getTask(id: string) {
   return res.json();
 }
 
-export default async function TaskDetails({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function TaskDetails({ params }: PageProps) {
   const task = await getTask(params.id);
 
   if (!task) {
