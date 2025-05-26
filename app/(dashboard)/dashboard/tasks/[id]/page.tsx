@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: {
-    id: string;
-  };
+  params: Record<string, string>; 
 };
 
 async function getTask(id: string) {
