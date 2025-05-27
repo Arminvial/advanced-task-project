@@ -1,39 +1,27 @@
+// app/(dashboard)/dashboard/tasks/[id]/page.tsx
+
 import { notFound } from "next/navigation";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+export default async function TaskDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://advanced-task-project.vercel.app";
 
-async function getTask(id: string) {
-  try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      "https://advanced-task-project.vercel.app";
+  const res = await fetch(`${baseUrl}/api/tasks/${params.id}`, {
+    cache: "no-store",
+  });
 
-    const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
-      cache: "no-store",
-    });
+  if (!res.ok) return notFound();
 
-    if (!res.ok) return null;
-
-    return res.json();
-  } catch (error) {
-    console.error("خطا در دریافت تسک:", error);
-    return null;
-  }
-}
-
-export default async function TaskPage({ params }: PageProps) {
-  const task = await getTask(params.id);
-
-  if (!task) return notFound();
+  const task = await res.json();
 
   return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-bold">{task.title}</h1>
-      <p className="text-gray-700">{task.description}</p>
+    <div>
+      <h1>{task.title}</h1>
+      <p>{task.description}</p>
     </div>
   );
 }
