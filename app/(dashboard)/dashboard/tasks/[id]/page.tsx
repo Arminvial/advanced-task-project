@@ -1,5 +1,3 @@
-// app/(dashboard)/dashboard/tasks/[id]/page.tsx
-
 import { notFound } from "next/navigation";
 
 export default async function TaskDetailPage({
