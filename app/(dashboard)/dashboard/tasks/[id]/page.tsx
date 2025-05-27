@@ -1,3 +1,6 @@
+import connectDB from "@/lib/mongodb";
+import Task from "@/models/task";
+import { getUserIdFromSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 
 export default async function TaskDetailPage({
@@ -5,16 +8,12 @@ export default async function TaskDetailPage({
 }: {
   params: { id: string };
 }) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://advanced-task-project.vercel.app";
+  await connectDB();
+  const userId = await getUserIdFromSession();
 
-  const res = await fetch(`${baseUrl}/api/tasks/${params.id}`, {
-    cache: "no-store",
-  });
+  const task = await Task.findOne({ _id: params.id, userId });
 
-  if (!res.ok) return notFound();
-
-  const task = await res.json();
+  if (!task) return notFound();
 
   return (
     <div>
