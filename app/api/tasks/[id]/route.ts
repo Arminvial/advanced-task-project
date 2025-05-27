@@ -48,10 +48,15 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
     await connectDB();
+    const userId = await getUserIdFromSession(); 
     const body = await req.json();
     delete body._id;
 
-    const result = await Task.findByIdAndUpdate(params.id, body, { new: true });
+    const result = await Task.findOneAndUpdate(
+      { _id: params.id, userId },
+      body,
+      { new: true }
+    );
 
     if (!result) {
       return NextResponse.json({ message: "هیچ تسکی ویرایش نشد" }, { status: 404 });
@@ -64,16 +69,22 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
+
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
     await connectDB();
+    const userId = await getUserIdFromSession(); 
     const { status } = await req.json();
 
     if (!['pending', 'in_progress', 'completed'].includes(status)) {
       return NextResponse.json({ message: "وضعیت نامعتبر است" }, { status: 400 });
     }
 
-    const result = await Task.findByIdAndUpdate(params.id, { status }, { new: true });
+    const result = await Task.findOneAndUpdate(
+      { _id: params.id, userId },
+      { status },
+      { new: true }
+    );
 
     if (!result) {
       return NextResponse.json({ message: "هیچ تسکی تغییر وضعیت نیافت" }, { status: 404 });
@@ -85,3 +96,4 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: "خطا در تغییر وضعیت تسک" }, { status: 500 });
   }
 }
+
