@@ -80,7 +80,10 @@ export default function TaskListPage() {
     try {
       await axios.patch(`/api/tasks/${taskId}`, { status });
       toast.success("وضعیت تسک تغییر یافت");
-      mutate();
+      console.log("Changing status for:", taskId, "to", status);
+      mutate(undefined, true);
+      const updatedTasks = await mutate(undefined, true);
+      console.log("Updated tasks:", updatedTasks);
     } catch {
       toast.error("خطا در تغییر وضعیت تسک");
     }

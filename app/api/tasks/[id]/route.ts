@@ -85,6 +85,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       { status },
       { new: true }
     );
+    if (!userId) {
+  console.error("userId یافت نشد");
+  return NextResponse.json({ error: "احراز هویت نامعتبر" }, { status: 401 });
+}
+
+    console.log("status received:", status);
+    console.log("userId from session:", userId);
+
 
     if (!result) {
       return NextResponse.json({ message: "هیچ تسکی تغییر وضعیت نیافت" }, { status: 404 });
@@ -95,5 +103,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     console.error("خطا در تغییر وضعیت تسک:", error);
     return NextResponse.json({ error: "خطا در تغییر وضعیت تسک" }, { status: 500 });
   }
+  
 }
 
