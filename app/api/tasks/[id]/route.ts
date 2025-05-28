@@ -1,21 +1,21 @@
-
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { getUserIdFromSession } from "@/lib/auth";
-import Task from "@/models/task"; 
+import Task from "@/models/task";
 
-interface Params {
+interface Context {
   params: {
     id: string;
   };
 }
 
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, context: Context) {
   try {
     await connectDB();
     const userId = await getUserIdFromSession();
+    const { id } = context.params;
 
-    const task = await Task.findOne({ _id: params.id, userId });
+    const task = await Task.findOne({ _id: id, userId });
 
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
@@ -28,11 +28,12 @@ export async function GET(request: Request, { params }: Params) {
   }
 }
 
-
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: Context) {
   try {
     await connectDB();
-    const result = await Task.findByIdAndDelete(params.id);
+    const { id } = context.params;
+
+    const result = await Task.findByIdAndDelete(id);
 
     if (!result) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
@@ -45,15 +46,17 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, context: Context) {
   try {
     await connectDB();
-    const userId = await getUserIdFromSession(); 
+    const userId = await getUserIdFromSession();
+    const { id } = context.params;
+
     const body = await req.json();
     delete body._id;
 
     const result = await Task.findOneAndUpdate(
-      { _id: params.id, userId },
+      { _id: id, userId },
       body,
       { new: true }
     );
@@ -69,11 +72,17 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, context: Context) {
   try {
     await connectDB();
-    const userId = await getUserIdFromSession(); 
+    const userId = await getUserIdFromSession();
+    const { id } = context.params;
+
+    if (!userId) {
+      console.error("userId یافت نشد");
+      return NextResponse.json({ error: "احراز هویت نامعتبر" }, { status: 401 });
+    }
+
     const { status } = await req.json();
 
     if (!['pending', 'in_progress', 'completed'].includes(status)) {
@@ -81,18 +90,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 
     const result = await Task.findOneAndUpdate(
-      { _id: params.id, userId },
+      { _id: id, userId },
       { status },
       { new: true }
     );
-    if (!userId) {
-  console.error("userId یافت نشد");
-  return NextResponse.json({ error: "احراز هویت نامعتبر" }, { status: 401 });
-}
 
     console.log("status received:", status);
     console.log("userId from session:", userId);
-
 
     if (!result) {
       return NextResponse.json({ message: "هیچ تسکی تغییر وضعیت نیافت" }, { status: 404 });
@@ -103,6 +107,4 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     console.error("خطا در تغییر وضعیت تسک:", error);
     return NextResponse.json({ error: "خطا در تغییر وضعیت تسک" }, { status: 500 });
   }
-  
 }
-
