@@ -1,19 +1,20 @@
-import connectDB from "@/lib/mongodb";
-import Task from "@/models/task";
-import { getUserIdFromSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
 export default async function TaskDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  await connectDB();
-  const userId = await getUserIdFromSession();
+  const baseUrl = getBaseUrl();
 
-  const task = await Task.findOne({ _id: params.id, userId });
+  const res = await fetch(`${baseUrl}/api/tasks/${params.id}`, {
+    cache: "no-store",
+  });
 
-  if (!task) return notFound();
+  if (!res.ok) return notFound();
+
+  const task = await res.json();
 
   return (
     <div>
